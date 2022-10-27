@@ -18,15 +18,21 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json({limit: '5gb'}));
 
 
-app.post(`/${process.env.webHookEndpoint}`, (req, res) => acceptRequests(req, res))
-app.get(`/${process.env.webHookEndpoint}`, (req, res) => acceptRequests(req, res))
-app.put(`/${process.env.webHookEndpoint}`, (req, res) => acceptRequests(req, res))
-app.delete(`/${process.env.webHookEndpoint}`, (req, res) => acceptRequests(req, res))
+app.post(`${process.env.webHookEndpoint}`, (req, res) => acceptRequests(req, res))
+app.get(`${process.env.webHookEndpoint}`, (req, res) => acceptRequests(req, res))
+app.put(`${process.env.webHookEndpoint}`, (req, res) => acceptRequests(req, res))
+app.delete(`${process.env.webHookEndpoint}`, (req, res) => acceptRequests(req, res))
 
 
 function acceptRequests(req, res) {
-    socket.emit(process.env.dataEvent, req.body);
-    res.send(202)
+    const request = {
+        params: req.query,
+        data: req.body,
+        route: req.route.path
+    }
+    
+    socket.emit(process.env.dataEvent, request);
+    res.sendStatus(202)
 }
 
 
