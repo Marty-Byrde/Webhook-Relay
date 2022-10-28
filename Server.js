@@ -27,9 +27,10 @@ app.delete(`${process.env.webHookEndpoint}`, (req, res) => acceptRequests(req, r
 function acceptRequests(req, res) {
     const request = {
         params: req.query,
-        data: req.body
+        data: req.body,
+        route: req.url.substring(1, req.url.length-1)
     }
-    
+
     socket.emit(process.env.dataEvent, request);
     res.sendStatus(202)
 }
